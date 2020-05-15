@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class VideoController {
 	@RequestMapping(value = "upload", method = RequestMethod.POST)
 	    @ResponseBody
-	    public Map<String,String> savaVideo(@RequestParam("file") MultipartFile file)
+	    public Map<String,String> VideoUpload(@RequestParam("file") MultipartFile file)
 	            throws IllegalStateException {
 	        Map<String,String> resultMap = new HashMap<>();
 	        try{
@@ -26,12 +26,12 @@ public class VideoController {
 	                    .toLowerCase();
 	            // 重构文件名称
 	            String pikId = UUID.randomUUID().toString().replaceAll("-", "");
-	            String newVidoeName = pikId + "." + fileExt;
+	            String newVideoName = pikId + "." + fileExt;
 	            //保存视频
-	            File fileSave = new File("/home/mig-chen/文档/data/videos", newVidoeName);
+	            File fileSave = new File("/home/mig-chen/文档/data/videos", newVideoName);
 	            file.transferTo(fileSave);
 	            resultMap.put("resCode","1");
-	            resultMap.put("webShowPath","/home/mig-chen/文档/data/videos" + newVidoeName);
+	            resultMap.put("webShowPath","/home/mig-chen/文档/data/videos" + newVideoName);
 	
 	            return  resultMap;
 	
