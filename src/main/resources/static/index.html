@@ -1,66 +1,86 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <script src="http://code.jquery.com/jquery-latest.js"></script>
-    </script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="assets/css/layui.css">
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <link rel="icon" href="/favicon.ico">
+    <title>管理后台</title>
 </head>
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header custom-header">
+            
+            <ul class="layui-nav layui-layout-left">
+                <li class="layui-nav-item slide-sidebar" lay-unselect>
+                    <a href="javascript:;" class="icon-font"><i class="ai ai-menufold"></i></a>
+                </li>
+            </ul>
 
-<body>
-<span><input style="width: 75%; height: 100%;display: block" type="file" name="myfile" onchange="uploadVideo(this)"/>
-</span>
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">陈科军</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">帮助中心</a></dd>
+                        <dd><a href="login.html">退出</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+
+        <div class="layui-side custom-admin">
+            <div class="layui-side-scroll">
+
+                <div class="custom-logo">
+                    <img src="assets/images/logo.png" alt=""/>
+                    <h1>AutoSub</h1>
+                </div>
+                <ul id="Nav" class="layui-nav layui-nav-tree">
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">
+                            <i class="layui-icon">&#xe609;</i>
+                            <em>自动字幕</em>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a href="views/upload.html">
+                                    <i class="layui-icon">&#xe681;</i>
+                                    <em>视频上传</em>
+                                </a>
+                            </dd>
+                            <dd>
+                                <a href="views/preview.html">
+                                    <i class="layui-icon">&#xe6ed;</i>
+                                    <em>效果预览</em>
+                                </a>
+                            </dd>
+                            <dd>
+                                <a href="views/download.html">
+                                    <i class="layui-icon">&#xe601;</i>
+                                    <em>视频下载</em>
+                                </a>
+                            </dd>
+                        </dl>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+
+        <div class="layui-body">
+             <div class="layui-tab app-container" lay-allowClose="true" lay-filter="tabs">
+                <ul id="appTabs" class="layui-tab-title custom-tab"></ul>
+                <div id="appTabPage" class="layui-tab-content"></div>
+            </div>
+        </div>
+
+        
+
+        <div class="mobile-mask"></div>
+    </div>
+    <script src="assets/layui.js"></script>
+    <script src="index.js" data-main="home"></script>
 </body>
-
-<script>
-
-    function uploadVideo(video) {
-        var fileObj = video.files[0]; // 获取文件对象
-
-        if (fileObj != undefined) {
-
-            if (fileObj.name) {
-                console.log(fileObj.name)
-            } else {
-                alert("请选择文件");
-            }
-
-            var size = fileObj.size;
-            var type = fileObj.type;
-
-            //校验格式
-            if (type.indexOf('mp4') == -1) {
-                alert("请上传MP4格式")
-                return false;
-            }
-            //校验大小
-            if (size / 1024 / 2014 > 50) {
-                alert("请上传" + size + "之内的视频")
-                return false;
-            }
-
-            var form = new FormData(); // FormData 对象
-            form.append("file", fileObj);
-            $.ajax({
-                url: "/video/upload",
-                contentType: false,//false 传输对象
-                processData: false,
-                type: "POST",
-                data: form,
-                success: function (ret) {
-                    if(ret.resCode != undefined){
-                        if(ret.resCode == '1'){
-                            alert("上传成功")
-                        }
-                        else if(ret.resCode == '0'){
-                            alert("上传失败")
-                        }
-                    }
-                }
-            })
-
-        }
-    }
-
-</script>
-
 </html>
