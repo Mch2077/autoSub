@@ -22,20 +22,20 @@ public class FfmpegCompSubUtil {
     		second = a/1000;
     		msecond = a%1000;
     	}
-    	if(a < 3600000 && a >= 60000) {
+    	else if(a < 3600000 && a >= 60000) {
     		hour = 0;
     		mintue = a/60000;
     		a = a%60000;
     		second = a/1000;
     		msecond = a%1000;	
     	}
-    	if(a < 60000 && a>=1000) {
+    	else if(a < 60000 && a>=1000) {
     		hour = 0;
     		mintue = 0;
     		second = a/1000;
     		msecond = a%1000;	
     	}
-    	if(a<1000) {
+    	else if(a<1000) {
     		hour = 0;
     		mintue = 0;
     		second = 0;
