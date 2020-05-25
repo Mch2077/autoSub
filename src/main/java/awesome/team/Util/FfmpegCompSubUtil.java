@@ -52,14 +52,17 @@ public class FfmpegCompSubUtil {
     //将字符串写入srt文件
 	private static void Srt(List<Map<String,String>> AMap, File file) {
 		try {
+		char[] fh= new char[10];
+				fh[0]='，';fh[1]='。';fh[2]='、';fh[3]='？';fh[4]='！';fh[5]='：';fh[6]='；';fh[7]='）';fh[8]='”';fh[9]='》';
         FileOutputStream fw = new FileOutputStream(file); 
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fw,"UTF-8")); 
         for(int i=0; i<AMap.size(); i++ ) {
         	Map m = AMap.get(i);
+        	int a = 30;
         	String s = "-->";
         	String s1 = time(Integer.valueOf(m.get("bg").toString())); 
         	String s2 = time(Integer.valueOf(m.get("ed").toString()));
-        	String s3 = m.get("onebest").toString();
+        	String s3 = "";
         	bw.write(String.valueOf(i+1));
         	bw.newLine();//换行  
         	bw.write(s1); 
@@ -68,7 +71,21 @@ public class FfmpegCompSubUtil {
         	bw.write(" ");
         	bw.write(s2);
         	bw.newLine();//换行 
-        	bw.write(s3);
+        	for(int j=0;j<m.get("onebest").toString().length()-1;j=j+a) {
+        		if(a!=30) a=30;
+        		if(j+a+1<m.get("onebest").toString().length()) {
+        			for(int k=0;k<10;k++){
+        			if(m.get("onebest").toString().charAt(j+a) == fh[k]) a=a+1;
+        			}
+        			s3=m.get("onebest").toString().substring(j,j+a);
+            	    bw.write(s3);
+            	    bw.newLine();//换行 
+        		}
+        		else {
+        			s3=m.get("onebest").toString().substring(j,m.get("onebest").toString().length());
+        			bw.write(s3);
+        		}
+        	}
         	bw.newLine();//换行 
         	if(i != AMap.size()) bw.newLine();//换行 
         	}
