@@ -6,11 +6,50 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class FfmpegCompSubUtil {
     private static String FFMPEG_PATH = "ffmpeg";
     
+    //时间转化
+    private static String time(int t) {
+    	int a = t;
+    	int hour = 0,mintue = 0, second = 0,msecond = 0;
+    	if(a >=3600000) {
+    		hour = a/3600000;
+    		a = a%3600000;
+    		mintue = a/60000;
+    		a = a%60000;
+    		second = a/1000;
+    		msecond = a%1000;
+    	}
+    	if(a < 3600000 && a >= 60000) {
+    		hour = 0;
+    		mintue = a/60000;
+    		a = a%60000;
+    		second = a/1000;
+    		msecond = a%1000;	
+    	}
+    	if(a < 60000 && a>=1000) {
+    		hour = 0;
+    		mintue = 0;
+    		second = a/1000;
+    		msecond = a%1000;	
+    	}
+    	if(a<1000) {
+    		hour = 0;
+    		mintue = 0;
+    		second = 0;
+    		msecond = a;
+    	}
+    	String h = "00"+String.valueOf(hour);
+    	String m = "00"+String.valueOf(mintue);
+    	String s = "00"+String.valueOf(second);
+    	String ms = "000"+String.valueOf(msecond);
+    	String time = h.substring(h.length()-2,h.length())+":"+m.substring(m.length()-2,m.length())+":"+s.substring(s.length()-2,s.length())+"."+ms.substring(ms.length()-3,ms.length());
+    	return time;
+    }
+    
+    //将字符串写入srt文件
 	private static void Srt(List<Map<String,String>> AMap, File file) {
 		try {
         FileOutputStream fw = new FileOutputStream(file); 
@@ -18,9 +57,9 @@ public class FfmpegCompSubUtil {
         for(int i=0; i<AMap.size(); i++ ) {
         	Map m = AMap.get(i);
         	String s = "-->";
-        	String s1 = m.get("beginTime").toString(); 
-        	String s2 = m.get("endTime").toString();
-        	String s3 = m.get("srtBody").toString();
+        	String s1 = time(Integer.valueOf(m.get("bg").toString())); 
+        	String s2 = time(Integer.valueOf(m.get("ed").toString()));
+        	String s3 = m.get("onebest").toString();
         	bw.write(String.valueOf(i+1));
         	bw.newLine();//换行  
         	bw.write(s1); 
@@ -38,6 +77,7 @@ public class FfmpegCompSubUtil {
 			System.out.println(e.toString());  
         } 
 	}
+	
 	
     public static String burnSubtitlesIntoVideo(String videoUrl ,List<Map<String,String>> AMap){
     	//获取视频名
