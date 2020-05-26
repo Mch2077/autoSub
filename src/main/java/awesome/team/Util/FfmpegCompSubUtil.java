@@ -99,6 +99,8 @@ public class FfmpegCompSubUtil {
     public static String burnSubtitlesIntoVideo(String videoUrl ,List<Map<String,String>> AMap){
     	//获取视频名
     	String filename = videoUrl.substring(0, videoUrl.lastIndexOf("."));
+    	//获取无路径视频名
+    	String Wfilename = videoUrl.substring(videoUrl.lastIndexOf("/") + 1, videoUrl.lastIndexOf("."));
     	//获取视频后缀
         String fileSuffix = videoUrl.substring(videoUrl.lastIndexOf(".") + 1).toLowerCase();
         //设置字幕地址
@@ -108,6 +110,8 @@ public class FfmpegCompSubUtil {
     	Srt(AMap,subtitleFile);
         
         String burnedFile = "";
+        String burnedFile1= "";
+        burnedFile1 = Wfilename+"(字幕版)."+fileSuffix;
         try {
             //将字幕压缩至视频中
             burnedFile = filename+"(字幕版)."+fileSuffix;
@@ -118,6 +122,6 @@ public class FfmpegCompSubUtil {
         	System.out.println(e.toString());
             System.out.println("视频压缩字幕失败，视频地址："+videoUrl+",字幕地址："+subtitleUrl );
         }
-        return burnedFile;
+        return burnedFile1;
     }
 }
