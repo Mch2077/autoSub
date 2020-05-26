@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../assets/css/layui.css">
+    <link rel="stylesheet" href="../assets/css/view.css"/>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="https://ciphertrick.com/demo/jquerysession/js/jquerysession.js"></script>
+    <title></title>
+</head>
+<body class="layui-view-body">
+    <div class="layui-content">
+        <div class="layui-page-header">
+            <div class="pagewrap">
+                <span class="layui-breadcrumb">
+                  <a href="">首页</a>
+                  <a href="">视频中心</a>
+                  <a><cite>视频预览</cite></a>
+                </span>
+                <h2 class="title">视频预览</h2>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <center>
+                       <button class="layui-btn layui-btn-blue" onclick="play()">点我预览</button>
+                       <br/><br/>
+                       <video id="video_player" width="800px" height="600px" controls="controls">
+                            Sorry, seems your web browser doesn't support our video player.
+                           <source id="video_src" type="video/mp4" />
+                       </video>
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../assets/layui.all.js"></script>
+    <script>
+        function play() {
+            var webShowPath = $.session.get("webShowPath");
+            alert(webShowPath);
+            document.getElementById("video_src").src = webShowPath;
+            document.getElementById("video_player").load();
+        }        
+    </script>
+</body>
+</html>
