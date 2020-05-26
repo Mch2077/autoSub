@@ -28,7 +28,7 @@
                        <button class="layui-btn layui-btn-blue" onclick="play()">点我预览</button>
                        <br/><br/>
                        <video id="video_player" width="800px" height="600px" controls="controls">
-                            Sorry, seems your web browser doesn't support the video player.
+                            Sorry, seems your web browser doesn't support our video player.
                            <source id="video_src" type="video/mp4" />
                        </video>
                     </center>
@@ -40,7 +40,9 @@
     <script src="../assets/layui.all.js"></script>
     <script>
         function play() {
-            document.getElementById("video_src").src = "../res/test.mp4";
+            var webShowPath = $.session.get("webShowPath");
+            alert(webShowPath);
+            document.getElementById("video_src").src = webShowPath;
             document.getElementById("video_player").load();
         }        
     </script>

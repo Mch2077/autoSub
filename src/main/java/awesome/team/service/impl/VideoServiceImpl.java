@@ -2,18 +2,22 @@ package awesome.team.service.impl;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.ClassUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import awesome.team.api.IfasrAPI;
 import awesome.team.service.VideoService;
 import awesome.team.util.ConvertUtil;
+import awesome.team.util.SrtUtil;
 
 @Service
 public class VideoServiceImpl implements VideoService {
-	private String storePath = "/home/mig-chen/文档/data/videos/";
+	private String storePath = ClassUtils.getDefaultClassLoader().getResource("static/res").getPath()+"/";
 	@Override
 	public Map<String, String> videoUpload(MultipartFile file) {
 		Map<String,String> resultMap = new HashMap<>();
@@ -27,13 +31,16 @@ public class VideoServiceImpl implements VideoService {
             //保存视频
             File fileSave = new File(storePath, newVideoName);
             file.transferTo(fileSave);
-            if (!videoProcess(storePath+newVideoName).isEmpty()) {
+            String videoPath = storePath+newVideoName;
+            String audioPath = ConvertUtil.transform(videoPath);
+            List<Map<String,String>> subMaps = IfasrAPI.getListMap(audioPath);
+            String burnedFile = SrtUtil.burnSubtitlesIntoVideo(videoPath, subMaps);
+            if (!burnedFile.isEmpty()) {
                 resultMap.put("statue","success");
-            	resultMap.put("webShowPath","http://ip:port/" + newVideoName); // JUST A EXAMPLE
+            	resultMap.put("webShowPath", burnedFile); // JUST A EXAMPLE
                 //考虑服务器使用http实现文件暴露下载
                 return  resultMap;
 			}
-            resultMap.put("statue","failed");
             //考虑服务器使用http实现文件暴露下载
             return  resultMap;
         }catch (Exception e){
@@ -41,9 +48,5 @@ public class VideoServiceImpl implements VideoService {
             resultMap.put("statue","failed");
             return  resultMap ;
         }
-	}
-
-	private String videoProcess(String filePath) throws Exception {
-		return ConvertUtil.transform(filePath);
 	}
 }

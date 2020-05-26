@@ -69,8 +69,9 @@
       ,size: 512000 //限制文件大小，单位 KB
       ,done: function(res){
         layer.msg('上传成功');
-        layui.$('#uploadDemoView').removeClass('layui-hide').find('img').attr('src', res.files.file);
-        console.log(res)
+        layui.$('#uploadDemoView').removeClass('layui-hide').find('img').attr('src', "/res/"+res.webShowPath);
+        $.session.set("webShowPath", "/res/"+res.webShowPath);
+        console.log(res);        
       }
       ,error: function(){
         //演示失败状态，并实现重传
