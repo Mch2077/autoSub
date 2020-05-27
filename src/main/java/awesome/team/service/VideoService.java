@@ -1,9 +1,9 @@
 package awesome.team.service;
 
-import java.util.Map;
-
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSONObject;
+
 public interface VideoService {
-	Map<String,String> videoUpload(MultipartFile file);
+	JSONObject videoUpload(MultipartFile file);
 }

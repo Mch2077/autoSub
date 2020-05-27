@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+    <mapper namespace="awesome.team.mapper.UserMapper">
+    	<resultMap id="BaseResultMap" type="awesome.team.domain.User">
+		    <result column="userName" jdbcType="VARCHAR" property="userName" />
+		    <result column="password" jdbcType="LONGVARCHAR" property="password" />
+		    <result column="token" jdbcType="LONGVARCHAR" property="token" />
+  		</resultMap>
+  		<sql id="Base_Column_List">
+		    userName, password, token 
+		</sql>
+        <select id="selectByUserName" parameterType="java.lang.String" resultMap="BaseResultMap">
+		    select 
+		    <include refid="Base_Column_List" />
+		    from autoSub.users
+		    where userName = #{userName}
+		    limit 1
+  		</select>
+  		<update id="updateByUP" parameterType="java.lang.String">
+		    update autoSub.users
+		    set
+		      userName = #{newUserName,jdbcType=VARCHAR},
+		      password = #{newPassword,jdbcType=LONGVARCHAR},
+		      token = #{token,jdbcType=LONGVARCHAR},
+		    where userName = #{oldUserName,jdbcType=VARCHAR}
+		    	and password = #{oldPassword,jdbcType=VARCHAR}
+  		</update>
+  		
+  		 <insert id="insertUser" parameterType="java.lang.String" >
+	        insert into autoSub.users (userName, password)
+	        values (#{userName}, #{password})
+    	</insert>
+    </mapper>
