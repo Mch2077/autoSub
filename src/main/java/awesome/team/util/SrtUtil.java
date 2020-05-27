@@ -7,12 +7,6 @@ import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Map;
 
-import java.io.BufferedWriter;  
-import java.io.File;  
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.util.List;
-import java.util.Map;
 
 public class SrtUtil {
 private static String FFMPEG_PATH = "ffmpeg";
