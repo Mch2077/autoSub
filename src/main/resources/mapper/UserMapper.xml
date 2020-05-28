@@ -6,8 +6,8 @@
     <mapper namespace="awesome.team.mapper.UserMapper">
     	<resultMap id="BaseResultMap" type="awesome.team.domain.User">
 		    <result column="userName" jdbcType="VARCHAR" property="userName" />
-		    <result column="password" jdbcType="LONGVARCHAR" property="password" />
-		    <result column="token" jdbcType="LONGVARCHAR" property="token" />
+		    <result column="password" jdbcType="VARCHAR" property="password" />
+		    <result column="token" jdbcType="VARCHAR" property="token" />
   		</resultMap>
   		<sql id="Base_Column_List">
 		    userName, password, token 
@@ -16,17 +16,16 @@
 		    select 
 		    <include refid="Base_Column_List" />
 		    from autoSub.users
-		    where userName = #{userName}
+		    where userName = #{userName, jdbcType=VARCHAR}
 		    limit 1
   		</select>
-  		<update id="updateByUP" parameterType="java.lang.String">
+  		
+  		<update id="updateTokenByUserName" parameterType="java.lang.String">
 		    update autoSub.users
-		    set
-		      userName = #{newUserName,jdbcType=VARCHAR},
-		      password = #{newPassword,jdbcType=LONGVARCHAR},
-		      token = #{token,jdbcType=LONGVARCHAR},
-		    where userName = #{oldUserName,jdbcType=VARCHAR}
-		    	and password = #{oldPassword,jdbcType=VARCHAR}
+		    <set>
+		      token = #{token, jdbcType=VARCHAR}
+		    </set>
+		    where userName = #{userName, jdbcType=VARCHAR}
   		</update>
   		
   		 <insert id="insertUser" parameterType="java.lang.String" >

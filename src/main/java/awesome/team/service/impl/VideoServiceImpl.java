@@ -37,7 +37,7 @@ public class VideoServiceImpl implements VideoService {
             List<Map<String,String>> subMaps = IfasrAPI.getListMap(audioPath);
             String burnedFile = SrtUtil.burnSubtitlesIntoVideo(videoPath, subMaps);
             if (!burnedFile.isEmpty()) {
-                result.put("statue","success");
+                result.put("code","200");
             	result.put("webShowPath", burnedFile); // JUST A EXAMPLE
                 //考虑服务器使用http实现文件暴露下载
                 return  result;
@@ -46,8 +46,8 @@ public class VideoServiceImpl implements VideoService {
             return  result;
         }catch (Exception e){
             e.printStackTrace();
-            result.put("statue","failed");
-           
+            result.put("code","400");
+            result.put("msg", "video upload failed");
             return  result ;
         }
 	}

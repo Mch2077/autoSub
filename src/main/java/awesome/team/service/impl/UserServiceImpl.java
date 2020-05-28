@@ -20,21 +20,26 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public JSONObject userLogin(String userName, String password) {
 		JSONObject result = new JSONObject();
-		if (userName.isEmpty() || password.isEmpty()) {
-			result.put("status", "4005");
-			result.put("errMsg", "username or password invalid");
-			return result;
-		}
-		User user =(User) userMapper.selectByUserName(userName);
-		if (user.getPassword().equals(Base64EncryptUtils.encrypt(password))){
-			
-			String token = Base64EncryptUtils.encrypt(user.getUserName()+"&"+
-							System.currentTimeMillis());
-			result.put("status", "200");
-            result.put("token", token);
-		}else {
-			result.put("status", "4007");
-			result.put("errMsg", "username or password is incorrect");
+		if (userName.isEmpty() || password.isEmpty() 
+				|| userName.equals(" ") || password.equals(" ")) {
+			result.put("code", "400");
+			result.put("msg", "paremeter invalid");
+		}else if (userMapper.selectByUserName(userName) == null) {
+			result.put("code", "400");
+			result.put("msg", "user doesn't exist");
+		}else{
+			User user = userMapper.selectByUserName(userName);
+			if (user.getPassword().equals(Base64EncryptUtils.encrypt(password))){
+				
+				String token = Base64EncryptUtils.encrypt(user.getUserName()+"&"+
+								System.currentTimeMillis());
+				result.put("code", "200");
+	            result.put("token", token);
+                userMapper.updateTokenByUserName(token, userName);
+			}else {
+				result.put("code", "400");
+				result.put("msg", "password incorrect");
+			}
 		}
 		return result;
 	}
@@ -45,50 +50,53 @@ public class UserServiceImpl implements UserService {
 			String oldUserName,String oldPassword) {
 		JSONObject result = new JSONObject();
 		if (newUserName.isEmpty() || newPassword.isEmpty() 
-				|| oldUserName.isEmpty() || oldPassword.isEmpty()) {
-			result.put("status", "4005");
-			result.put("errMsg", "paremeter invalid");
-			return result;
-		}
-		User user = userMapper.selectByUserName(oldUserName);
-		if (user.getPassword().equals(Base64EncryptUtils.encrypt(oldPassword))){
-			
-			String token = Base64EncryptUtils.encrypt(newUserName+"&"+
-							System.currentTimeMillis());
-			newPassword = Base64EncryptUtils.encrypt(newPassword);
-			try {
-				userMapper.updateByUP(newUserName, newPassword, token, oldUserName, oldPassword);
-				result.put("status", "200");
-	            result.put("token", token);
-			} catch (Exception e) {
-				result.put("status", "4002");
-				result.put("errMsg", "update failed");
-			}
+				|| oldUserName.isEmpty() || oldPassword.isEmpty()
+				|| newUserName.equals(" ") || newPassword.equals(" ") 
+				|| oldUserName.equals(" ") || oldPassword.equals(" ")) {
+			result.put("code", "400");
+			result.put("msg", "paremeter invalid");
 		}else {
-			result.put("status", "4007");
-			result.put("errMsg", "username or password is incorrect");
-		}
-			
+			try {
+				User user = userMapper.selectByUserName(oldUserName);
+				if (user.getPassword().equals(Base64EncryptUtils.encrypt(oldPassword))){
+				String token = Base64EncryptUtils.encrypt(newUserName+"&"+
+						System.currentTimeMillis());
+				newPassword = Base64EncryptUtils.encrypt(newPassword);
+					try {
+						//userMapper.updateByUP(newUserName, newPassword, token, oldUserName, oldPassword);
+						result.put("code", "200");
+			            result.put("token", token);
+					} catch (Exception e) {
+						result.put("code", "400");
+						result.put("msg", "update failed");
+					}
+				}else {
+					result.put("code", "400");
+					result.put("msg", "paremeter incorrect");
+				}
+			} catch (Exception e) {
+				result.put("code", "400");
+				result.put("msg", "user does't exist");
+			}
+		}		
 		return result;
 	}
 	
 	@Override
 	public JSONObject userRegister(String userName,String password) {
 		JSONObject result = new JSONObject();
-		if (userName.isEmpty() || password.isEmpty()) {
-			result.put("status", "4005");
-			result.put("errMsg", "paremeter invalid");
-			return result;
-		}
-		password = Base64EncryptUtils.encrypt(password);
-		try {
+		if (userName.isEmpty() || password.isEmpty()
+			|| userName.equals(" ") || password.equals(" ")) {
+			result.put("code", "400");
+			result.put("msg", "paremeter invalid");
+		}else if (userMapper.selectByUserName(userName) != null) {
+			result.put("code", "400");
+			result.put("msg", "user already exist");
+		}else{
+			password = Base64EncryptUtils.encrypt(password);
 			userMapper.insertUser(userName, password);
-			result.put("status", "200");
-		} catch (Exception e) {
-			result.put("status", "4003");
-			result.put("errMsg", "insert failed");
-		}	
+			result.put("code", "200");
+		}
 		return result;
 	}
-
 }

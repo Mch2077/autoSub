@@ -65,25 +65,24 @@
       ,accept: 'video' //视频
       ,exts: 'mp4' //只允许上传mp4
       ,auto: false
-      ,header: {Authorization: token}
+      ,headers: {Authorization: token}
       //,multiple: true
       ,bindAction: '#upload'
       ,size: 512000 //限制文件大小，单位 KB
       ,done: function(res){
-        layer.msg('上传成功');
-        layui.$('#uploadDemoView').removeClass('layui-hide').find('img').attr('src', "/res/"+res.webShowPath);
-        $.session.set("webShowPath", "/res/"+res.webShowPath);
-        $.session.set("token", res.token);
-        console.log(res);
-        window.location.href = 'preview.html';
+        if (res.code == 200) {
+          layer.msg('upload success');
+          layui.$('#uploadDemoView').removeClass('layui-hide').find('img').attr('src', "/res/"+res.webShowPath);
+          $.session.set("webShowPath", "/res/"+res.webShowPath);
+          $.session.set("token", res.token);
+          console.log(res);
+          window.location.href = 'preview.html';
+        }else{
+            layer.msg(res.msg);
+        }
       }
       ,error: function(){
-        //演示失败状态，并实现重传
-        var demoText = $('#demoText');
-        demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
-        demoText.find('.demo-reload').on('click', function(){
-          uploadInst.upload();
-        });
+          layer.msg('upload failed');
       }
     });
   });
