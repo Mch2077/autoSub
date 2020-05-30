@@ -43,12 +43,12 @@ public class IfasrAPI {
      */
     public static final int SLICE_SICE = 10485760;// 10M
 
-    public static List<Map<String,String>> getListMap(String filePath) {
+    public static List<Map<String,String>> getListMap(String filePath ,boolean isCN) {
         File audio = new File(filePath);
         List<Map<String,String>> listObjectFir;
         try (FileInputStream fis = new FileInputStream(audio)) {
             // 预处理
-            String taskId = prepare(audio);
+            String taskId = prepare(audio , isCN);
   //          System.out.println(taskId + "???");
             // 分片上传文件
             int len = 0;
@@ -136,14 +136,14 @@ public class IfasrAPI {
      * @return
      * @throws SignatureException 
      */
-    public static String prepare(File audio) throws SignatureException {
+    public static String prepare(File audio , boolean isCN) throws SignatureException {
         Map<String, String> prepareParam = getBaseAuthParam(null);
         long fileLenth = audio.length();
 
         prepareParam.put("file_len", fileLenth + "");
         prepareParam.put("file_name", audio.getName());
         prepareParam.put("slice_num", (fileLenth/SLICE_SICE) + (fileLenth % SLICE_SICE == 0 ? 0 : 1) + "");
-
+        if(!isCN)prepareParam.put("language","en");
         /********************TODO 可配置参数********************/
         // 转写类型
 //        prepareParam.put("lfasr_type", "0");
