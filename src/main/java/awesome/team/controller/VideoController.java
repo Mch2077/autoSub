@@ -29,11 +29,12 @@ public class VideoController {
 
 	@RequestMapping(value = "upload", method = RequestMethod.POST)
     public JSONObject videoUpload(@RequestParam("file") MultipartFile file, 
+    		@RequestParam("language") boolean isCN,
     		@RequestHeader("Authorization")String token)
             throws IllegalStateException {
 		
 		JSONObject result = new JSONObject();
-		
+		//System.out.println(language);
 		if (!token.isEmpty() && !token.equals("") && token != null && !token.isBlank()) {
 			
             String tempString = Base64EncryptUtils.decrypt(token);
@@ -45,7 +46,7 @@ public class VideoController {
 	            //request.setAttribute(REQUEST_CURRENT_KEY, userName);
 	            //token = Base64EncryptUtils.encrypt(user.getUserName()+"&"+System.currentTimeMillis());
 	            //userMapper.updateTokenByUserName(token, user.getUserName());
-	            result = vs.videoUpload(file);
+		        result = vs.videoUpload(file,isCN);
 	            result.put("token",token);
 	        }else {
 				result.put("code","401");

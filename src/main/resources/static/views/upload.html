@@ -27,7 +27,18 @@
                 <div class="layui-card-body">
                   <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
                     <legend>拖拽上传</legend>
-                  </fieldset> 
+                  </fieldset>
+                  <form class="layui-form"> <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
+                    <div class="layui-form-item" style="width: 15%;margin-left: 30PX">
+                      <label class="layui-form-label">选择语言</label>
+                      <div class="layui-input-block">
+                        <select id="language" lay-filter="language">
+                          <option value="1">中文</option>
+                          <option value="0">英文</option>
+                        </select>
+                      </div>
+                    </div>
+                  </form>
                   <center>
                     <div class="layui-upload-drag" id="select">
                     <i class="layui-icon">&#xe67c;</i>
@@ -50,8 +61,6 @@
   <script src="http://code.jquery.com/jquery-latest.js"></script>
   <script src="https://ciphertrick.com/demo/jquerysession/js/jquerysession.js"></script>
   <script src="../assets/js/upload.js"></script>
-
   <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
-
 </body>
 </html>

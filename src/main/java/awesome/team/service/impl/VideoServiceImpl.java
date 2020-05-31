@@ -20,7 +20,7 @@ import awesome.team.util.SrtUtil;
 public class VideoServiceImpl implements VideoService {
 	private String storePath = ClassUtils.getDefaultClassLoader().getResource("static/res").getPath()+"/";
 	@Override
-	public JSONObject videoUpload(MultipartFile file) {
+	public JSONObject videoUpload(MultipartFile file, boolean isCN) {
 		JSONObject result = new JSONObject() ;
         try{
             //获取文件后缀
@@ -34,7 +34,7 @@ public class VideoServiceImpl implements VideoService {
             file.transferTo(fileSave);
             String videoPath = storePath+newVideoName;
             String audioPath = ConvertUtil.transform(videoPath);
-            List<Map<String,String>> rawMap = IfasrAPI.getListMap(audioPath);
+            List<Map<String,String>> rawMap = IfasrAPI.getListMap(audioPath,isCN);
             List<Map<String,String>> tempSub = SrtUtil.lm(rawMap);
             if (!tempSub.isEmpty()) {
                 result.put("code","0");
