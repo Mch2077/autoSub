@@ -34,15 +34,17 @@ public class VideoServiceImpl implements VideoService {
             file.transferTo(fileSave);
             String videoPath = storePath+newVideoName;
             String audioPath = ConvertUtil.transform(videoPath);
-            List<Map<String,String>> subMaps = IfasrAPI.getListMap(audioPath);
-            String burnedFile = SrtUtil.burnSubtitlesIntoVideo(videoPath, subMaps);
-            if (!burnedFile.isEmpty()) {
-                result.put("code","200");
-            	result.put("webShowPath", burnedFile); // JUST A EXAMPLE
+            List<Map<String,String>> rawMap = IfasrAPI.getListMap(audioPath);
+            List<Map<String,String>> tempSub = SrtUtil.lm(rawMap);
+            if (!tempSub.isEmpty()) {
+                result.put("code","0");
+            	result.put("data", tempSub);
+            	result.put("msg", "upload success");
+            	result.put("videoUrl", videoPath);
+            	result.put("count",tempSub.size());
                 //考虑服务器使用http实现文件暴露下载
                 return  result;
 			}
-            //考虑服务器使用http实现文件暴露下载
             return  result;
         }catch (Exception e){
             e.printStackTrace();

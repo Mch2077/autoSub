@@ -7,28 +7,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
 
 import awesome.team.domain.User;
 import awesome.team.mapper.UserMapper;
-import awesome.team.service.VideoService;
+import awesome.team.service.SrtService;
 import awesome.team.util.Base64EncryptUtils;
 
 
-@RequestMapping("/video")
+@RequestMapping("/srt")
 @RestController
-public class VideoController {
+public class SrtController {
 	
 	@Resource
-    private VideoService vs;
+    private SrtService ss;
 	
 	@Resource
 	UserMapper userMapper;
 
-	@RequestMapping(value = "upload", method = RequestMethod.POST)
-    public JSONObject videoUpload(@RequestParam("file") MultipartFile file, 
+	@RequestMapping(value = "process", method = RequestMethod.POST)
+    public JSONObject videoUpload(@RequestParam("videoUrl") String videoUrl,
+    		@RequestParam("srt") String srt,
     		@RequestHeader("Authorization")String token)
             throws IllegalStateException {
 		
@@ -45,7 +45,7 @@ public class VideoController {
 	            //request.setAttribute(REQUEST_CURRENT_KEY, userName);
 	            //token = Base64EncryptUtils.encrypt(user.getUserName()+"&"+System.currentTimeMillis());
 	            //userMapper.updateTokenByUserName(token, user.getUserName());
-	            result = vs.videoUpload(file);
+	            result = ss.burnSrt(videoUrl, srt);
 	            result.put("token",token);
 	        }else {
 				result.put("code","401");
