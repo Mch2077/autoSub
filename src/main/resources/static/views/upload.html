@@ -8,8 +8,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link rel="stylesheet" href="../assets/css/layui.css"  media="all">
   <link rel="stylesheet" href="../assets/css/view.css"/>
-  <script src="http://code.jquery.com/jquery-latest.js"></script>
-  <script src="https://ciphertrick.com/demo/jquerysession/js/jquerysession.js"></script>
   <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
 </head>
 <body class="layui-view-body">
@@ -29,7 +27,18 @@
                 <div class="layui-card-body">
                   <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
                     <legend>拖拽上传</legend>
-                  </fieldset> 
+                  </fieldset>
+                  <form class="layui-form"> <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
+                    <div class="layui-form-item" style="width: 15%;margin-left: 30PX">
+                      <label class="layui-form-label">选择语言</label>
+                      <div class="layui-input-block">
+                        <select id="language" lay-filter="language">
+                          <option value="1">中文</option>
+                          <option value="0">英文</option>
+                        </select>
+                      </div>
+                    </div>
+                  </form>
                   <center>
                     <div class="layui-upload-drag" id="select">
                     <i class="layui-icon">&#xe67c;</i>
@@ -37,10 +46,6 @@
                       点击上传，或将文件拖拽到此处
                       <br>现仅支持500MB以下的MP4视频文件
                     </p>
-                    <div class="layui-hide" id="uploadDemoView">
-                      <hr>
-                      <img src="" alt="上传成功后渲染" style="max-width: 196px">
-                    </div>
                     </div>
                     <br>
                     <button type="button" class="layui-btn" id="upload">开始上传</button>
@@ -50,39 +55,12 @@
         </div>
     </div> 
             
+  <script src="../assets/layui.js"></script>
   <script src="../assets/layui.all.js"></script>
+  <script src="../assets/js/particle.js"></script>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+  <script src="https://ciphertrick.com/demo/jquerysession/js/jquerysession.js"></script>
+  <script src="../assets/js/upload.js"></script>
   <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
-  <script>
-  layui.use('upload', function(){
-    var $ = layui.jquery
-    ,upload = layui.upload;
-    
-    //拖拽上传mp4
-    var uploadInst = upload.render({
-      elem: '#select'
-      ,url: 'http://localhost:8080/video/upload' //改成您自己的上传接口
-      ,accept: 'video' //视频
-      ,exts: 'mp4' //只允许上传mp4
-      ,auto: false
-      //,multiple: true
-      ,bindAction: '#upload'
-      ,size: 512000 //限制文件大小，单位 KB
-      ,done: function(res){
-        layer.msg('上传成功');
-        layui.$('#uploadDemoView').removeClass('layui-hide').find('img').attr('src', "/res/"+res.webShowPath);
-        $.session.set("webShowPath", "/res/"+res.webShowPath);
-        console.log(res);        
-      }
-      ,error: function(){
-        //演示失败状态，并实现重传
-        var demoText = $('#demoText');
-        demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
-        demoText.find('.demo-reload').on('click', function(){
-          uploadInst.upload();
-        });
-      }
-    });
-  });
-  </script>
 </body>
 </html>

@@ -15,7 +15,7 @@ import com.alibaba.fastjson.JSONArray;
 import awesome.team.domain.ApiResultDto;
 import awesome.team.util.EncryptUtil;
 import awesome.team.util.HttpUtil;
-import awesome.team.util.IdUtil;
+import awesome.team.util.SliceIdGenerator;
 
 /*
   通过IfasrAPI.getListMap(文件路径) 可获得 调用科大讯飞API语音转文字的List<Map<String,String>>
@@ -28,36 +28,36 @@ import awesome.team.util.IdUtil;
 
 public class IfasrAPI {
 
-	private static final String LFASR_HOST = "http://raasr.xfyun.cn/api";
+    public static final String LFASR_HOST = "http://raasr.xfyun.cn/api";
 
     /**
      * TODO 设置appid和secret_key
      */
-    private static final String APPID = "5ec2cccc";
-    private static final String SECRET_KEY = "46c6eaeb2148f6694bbf6a679e149ce3";
+    public static final String APPID = "5ec2cccc";
+    public static final String SECRET_KEY = "46c6eaeb2148f6694bbf6a679e149ce3";
 
-    private static final String PREPARE = "/prepare";
-    private static final String UPLOAD = "/upload";
-    private static final String MERGE = "/merge";
-    private static final String GET_RESULT = "/getResult";
-    private static final String GET_PROGRESS = "/getProgress";
+    public static final String PREPARE = "/prepare";
+    public static final String UPLOAD = "/upload";
+    public static final String MERGE = "/merge";
+    public static final String GET_RESULT = "/getResult";
+    public static final String GET_PROGRESS = "/getProgress";
 
     /**
      * 文件分片大小,可根据实际情况调整
      */
-    private static final int SLICE_SICE = 10485760;// 10M
+    public static final int SLICE_SICE = 10485760;// 10M
 
-    public static List<Map<String,String>> getListMap(String filePath) {
+    public static List<Map<String,String>> getListMap(String filePath ,boolean isCN) {
         File audio = new File(filePath);
         List<Map<String,String>> listObjectFir;
         try (FileInputStream fis = new FileInputStream(audio)) {
             // 预处理
-            String taskId = prepare(audio);
+            String taskId = prepare(audio , isCN);
   //          System.out.println(taskId + "???");
             // 分片上传文件
             int len = 0;
             byte[] slice = new byte[SLICE_SICE];
-            IdUtil generator = new IdUtil();
+            SliceIdGenerator generator = new SliceIdGenerator();
             while ((len =fis.read(slice)) > 0) {
                 // 上传分片
                 if (fis.available() == 0) {
@@ -73,7 +73,7 @@ public class IfasrAPI {
             while (true) {
                 try {
                     System.out.println("sleep a while Zzz" );
-                    Thread.sleep(1000);
+                    Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -96,7 +96,6 @@ public class IfasrAPI {
             }
             // 获取结果
             listObjectFir = (List<Map<String,String>>) JSONArray.parse(getResult(taskId));
-            System.out.println(JSON.toJSONString(listObjectFir));
             return listObjectFir;
      //       System.out.println("利用JSONArray中的parse方法来解析json数组字符串");
   /*          for(Map<String,String> mapList : listObjectFir){
@@ -121,7 +120,7 @@ public class IfasrAPI {
      * @return
      * @throws SignatureException 
      */
-    private static Map<String, String> getBaseAuthParam(String taskId) throws SignatureException {
+    public static Map<String, String> getBaseAuthParam(String taskId) throws SignatureException {
         Map<String, String> baseParam = new HashMap<String, String>();
         String ts = String.valueOf(System.currentTimeMillis() / 1000L);
         baseParam.put("app_id", APPID);
@@ -141,14 +140,14 @@ public class IfasrAPI {
      * @return
      * @throws SignatureException 
      */
-    private static String prepare(File audio) throws SignatureException {
+    public static String prepare(File audio , boolean isCN) throws SignatureException {
         Map<String, String> prepareParam = getBaseAuthParam(null);
         long fileLenth = audio.length();
 
         prepareParam.put("file_len", fileLenth + "");
         prepareParam.put("file_name", audio.getName());
         prepareParam.put("slice_num", (fileLenth/SLICE_SICE) + (fileLenth % SLICE_SICE == 0 ? 0 : 1) + "");
-
+        if(!isCN)prepareParam.put("language","en");
         /********************TODO 可配置参数********************/
         // 转写类型
 //        prepareParam.put("lfasr_type", "0");
@@ -188,7 +187,7 @@ public class IfasrAPI {
      * @param slice         分片的byte数组
      * @throws SignatureException 
      */
-    private static void uploadSlice(String taskId, String sliceId, byte[] slice) throws SignatureException {
+    public static void uploadSlice(String taskId, String sliceId, byte[] slice) throws SignatureException {
         Map<String, String> uploadParam = getBaseAuthParam(taskId);
         uploadParam.put("slice_id", sliceId);
 
@@ -211,7 +210,7 @@ public class IfasrAPI {
      * @param taskId        任务id
      * @throws SignatureException 
      */
-    private static void merge(String taskId) throws SignatureException {
+    public static void merge(String taskId) throws SignatureException {
         String response = HttpUtil.post(LFASR_HOST + MERGE, getBaseAuthParam(taskId));
         if (response == null) {
             throw new RuntimeException("文件合并接口请求失败！");
@@ -230,7 +229,7 @@ public class IfasrAPI {
      * @param taskId        任务id
      * @throws SignatureException 
      */
-    private static ApiResultDto getProgress(String taskId) throws SignatureException {
+    public static ApiResultDto getProgress(String taskId) throws SignatureException {
         String response = HttpUtil.post(LFASR_HOST + GET_PROGRESS, getBaseAuthParam(taskId));
         if (response == null) {
             throw new RuntimeException("获取任务进度接口请求失败！");
@@ -246,7 +245,7 @@ public class IfasrAPI {
      * @return
      * @throws SignatureException 
      */
-    private static String getResult(String taskId) throws SignatureException {
+    public static String getResult(String taskId) throws SignatureException {
         String responseStr = HttpUtil.post(LFASR_HOST + GET_RESULT, getBaseAuthParam(taskId));
         if (responseStr == null) {
             throw new RuntimeException("获取结果接口请求失败！");

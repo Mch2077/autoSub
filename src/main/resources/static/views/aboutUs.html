@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="assets/css/layui.css">
+    <link rel="stylesheet" href="assets/css/login.css">
+    <link rel="icon" href="/favicon.ico">
+    <title>关于我们</title>
+</head>
+<body>
+    <div>
+    	
+    </div>
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	<script src="https://ciphertrick.com/demo/jquerysession/js/jquerysession.js"></script>
+	<script src="../assets/layui.js"></script>
+	<script src="../assets/layui.all.js"></script>
+	<script src="../assets/js/particle.js"></script>
+	<script src="../assets/js/index.js" data-main="login"></script>
+    <script>
+	    $(function(){
+	        $('#btn1').off().on('click', function(){
+	        	var userName = $('#userName').val();
+	        	var password = $('#password').val();
+	        		$.ajax({
+	                cache: false,
+	                type: "post",
+	                url:"http://localhost:8080/user/register",
+	                data: {userName: userName,
+	            			password: password},
+	            	dataType:'json',
+	                async: false,
+	                success : function(result) {
+		                if (result.code==200) {   
+	                        alert("register success");
+	                        window.location.href = 'login.html';
+		                }else{
+		                	alert(result.msg);
+		                }
+	            	},
+		            error : function(errorMsg) {
+		                //请求失败时执行该函数
+		                alert("server error");
+		            },
+	        	})
+
+	        })
+	    })
+ 
+
+ 		$("#btn2").click(function () {
+			window.location.href = 'register.html';
+		})
+	</script>
+</body>
+</html>

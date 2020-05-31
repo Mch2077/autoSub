@@ -7,64 +7,74 @@
     <link rel="stylesheet" href="assets/css/layui.css">
     <link rel="stylesheet" href="assets/css/login.css">
     <link rel="icon" href="/favicon.ico">
-    <script src="http://code.jquery.com/jquery-latest.js"></script>
-    <script src="https://ciphertrick.com/demo/jquerysession/js/jquerysession.js"></script>
-    <title>管理后台</title>
+    <title>视频字幕自动生成器-登录</title>
 </head>
 <body class="login-wrap">
     <div class="login-container">
         <form class="login-form">
             <div class="input-group">
-                <input type="text" id="username" class="input-field">
+                <input type="text" id="userName" class="input-field" lay-verify="required|userName">
                 <label for="username" class="input-label">
                     <span class="label-title">用户名</span>
                 </label>
             </div>
             <div class="input-group">
-                <input type="password" id="password" class="input-field">
+                <input type="password" id="password" class="input-field" lay-verify="required|password">
                 <label for="password" class="input-label">
                     <span class="label-title">密码</span>
                 </label>
             </div>
-            <button type="button" class="login-button" id="btn1">登录<i class="ai ai-enter"></i></button>
+            <button type="button" class="login-button"id="btn1">登录<i class="ai ai-enter"></i></button>
+            <button type="button" class="login-button" id="btn2">注册<i class="ai ai-enter"></i></button>
         </form>
     </div>
 
-    <script>
-	    $(function(){
-	        $('#btn1').off().on('click', function(){
-	        		var data = {};
-					data["userName"] = $('#username').val();
-					data["password"] = $('#password').val();
-	        		$.ajax({
-	                cache: false,
-	                type: "POST",
-	                url:"http://47.108.183.103:8080/vemu/user/login",
-	                data: JSON.stringify(data),
-	                dataType: "JSON",
-	                contentType:'application/json;charset=UTF-8',
-	                async: false,
-	                success : function(result) {
-		                if (result.success==true) {   
-	                        var token = JSON.stringify(result.data.token);
-	                        alert("登陆成功");
-	                        $.session.set("token", token);
-	                        window.location.href = 'link.html';
-		                }else{
-		                	alert("登陆失败");
-		                }
-	            	},
-		            error : function(errorMsg) {
-		                //请求失败时执行该函数
-		                alert("服务器连接失败");
-		            },
-	        	})
 
-	        })
-	    })
- 
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	<script src="https://ciphertrick.com/demo/jquerysession/js/jquerysession.js"></script>
+	<script src="assets/layui.js"></script>
+	<script src="assets/layui.all.js"></script>
+	<script src="assets/js/particle.js"></script>
+	<script src="index.js" data-main="login"></script>
+    <script>
+    	layui.use('layer', function(){
+      		var layer = layui.layer;
+    		$(function(){
+		        $('#btn1').off().on('click', function(){
+		        	var userName = $('#userName').val();
+		        	var password = $('#password').val();
+		        		$.ajax({
+		                cache: false,
+		                type: "post",
+		                url:"http://localhost:8080/user/login",
+		                data: {userName: userName,
+		            			password: password},
+		            	dataType:'json',
+		                async: false,
+		                success : function(result) {
+			                if (result.code==200) {   
+		                        layer.msg("login success");
+		                        window.location.href = 'index.html';
+		                        $.session.set("token",result.token);
+			                }else{
+			                	layer.msg(result.msg);
+			                }
+		            	},
+			            error : function(errorMsg) {
+			                //请求失败时执行该函数
+			                layer.msg("server error");
+			            },
+		        	});
+
+		        });
+
+
+		        $('#btn2').off().on('click', function(){
+		        	window.location.href = 'register.html';
+		        });
+
+	    	});
+    	});
 	</script>
 </body>
-<script src="assets/layui.js"></script>
-<script src="index.js" data-main="login"></script>
 </html>

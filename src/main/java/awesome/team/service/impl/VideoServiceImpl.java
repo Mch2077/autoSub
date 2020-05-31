@@ -1,7 +1,6 @@
 package awesome.team.service.impl;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -9,6 +8,8 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.alibaba.fastjson.JSONObject;
 
 import awesome.team.api.IfasrAPI;
 import awesome.team.service.VideoService;
@@ -19,8 +20,8 @@ import awesome.team.util.SrtUtil;
 public class VideoServiceImpl implements VideoService {
 	private String storePath = ClassUtils.getDefaultClassLoader().getResource("static/res").getPath()+"/";
 	@Override
-	public Map<String, String> videoUpload(MultipartFile file) {
-		Map<String,String> resultMap = new HashMap<>();
+	public JSONObject videoUpload(MultipartFile file, boolean isCN) {
+		JSONObject result = new JSONObject() ;
         try{
             //获取文件后缀
             String fileExt = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1)
@@ -33,20 +34,23 @@ public class VideoServiceImpl implements VideoService {
             file.transferTo(fileSave);
             String videoPath = storePath+newVideoName;
             String audioPath = ConvertUtil.transform(videoPath);
-            List<Map<String,String>> subMaps = IfasrAPI.getListMap(audioPath);
-            String burnedFile = SrtUtil.burnSubtitlesIntoVideo(videoPath, subMaps);
-            if (!burnedFile.isEmpty()) {
-                resultMap.put("statue","success");
-            	resultMap.put("webShowPath", burnedFile); // JUST A EXAMPLE
+            List<Map<String,String>> rawMap = IfasrAPI.getListMap(audioPath,isCN);
+            List<Map<String,String>> tempSub = SrtUtil.lm(rawMap);
+            if (!tempSub.isEmpty()) {
+                result.put("code","0");
+            	result.put("data", tempSub);
+            	result.put("msg", "upload success");
+            	result.put("videoUrl", videoPath);
+            	result.put("count",tempSub.size());
                 //考虑服务器使用http实现文件暴露下载
-                return  resultMap;
+                return  result;
 			}
-            //考虑服务器使用http实现文件暴露下载
-            return  resultMap;
+            return  result;
         }catch (Exception e){
             e.printStackTrace();
-            resultMap.put("statue","failed");
-            return  resultMap ;
+            result.put("code","400");
+            result.put("msg", "video upload failed");
+            return  result ;
         }
 	}
 }

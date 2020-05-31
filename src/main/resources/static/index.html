@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="assets/css/layui.css">
     <link rel="stylesheet" href="assets/css/admin.css">
     <link rel="icon" href="/favicon.ico">
-    <title>管理后台</title>
+    <title>视频字幕自动生成器-主页</title>
 </head>
 <body class="layui-layout-body">
     <div class="layui-layout layui-layout-admin">
@@ -21,9 +21,10 @@
 
             <ul class="layui-nav layui-layout-right">
                 <li class="layui-nav-item">
-                    <a href="javascript:;">AwesomeTeam</a>
+                    <a href="login.html" id="userName">请登录</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="">关于我们</a></dd>
+                        <dd><a href="">帮助中心</a></dd>
+                        <dd><a href="login.html">退出</a></dd>
                     </dl>
                 </li>
             </ul>
@@ -55,12 +56,6 @@
                                     <em>效果预览</em>
                                 </a>
                             </dd>
-                            <dd>
-                                <a href="views/download.html">
-                                    <i class="layui-icon">&#xe601;</i>
-                                    <em>视频下载</em>
-                                </a>
-                            </dd>
                         </dl>
                     </li>
                 </ul>
@@ -75,11 +70,25 @@
             </div>
         </div>
 
+        <div class="layui-footer">
+            <p>© 2020, <a href="https://github.com/Mch2077/autoSub" target="_blank">AwesomeTeam</a></p>
+        </div>
         
 
         <div class="mobile-mask"></div>
     </div>
     <script src="assets/layui.js"></script>
     <script src="index.js" data-main="home"></script>
+    <script src="assets/js/Base64.js"></script>
+    <script src="assets/js/particle.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="https://ciphertrick.com/demo/jquerysession/js/jquerysession.js"></script>
+    <script type="text/javascript">
+        var base = new BASE64();
+        var token = $.session.get("token");
+        var tempString = base.decode(token);
+        var tempWords = tempString.split("&");
+        $("#userName").text(tempWords[0]);
+    </script>
 </body>
 </html>
