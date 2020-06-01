@@ -18,6 +18,7 @@ public class SrtServiceImpl implements SrtService {
 	@Override
 	public JSONObject burnSrt(String videoUrl, String srt) {
 		JSONObject result = new JSONObject() ;
+		System.out.println(srt);
 		List<Map<String,String>> AMap = (List<Map<String,String>>) JSONArray.parse(srt);
 		
         try{
