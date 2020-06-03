@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Layui</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="../assets/css/layui.css"  media="all">
+  <link rel="stylesheet" href="../assets/css/view.css"/>
+  <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+</head>
+<body class="layui-view-body">
+    <div class="layui-content">
+        <div class="layui-row">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                  <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                    <legend>字幕编辑</legend>
+                  </fieldset>
+                  <form class="layui-form">
+                    <div class="layui-form-item" style="width: 15%; margin-left: 30PX">
+                      <label class="layui-form-label">翻译语言</label>
+                      <div class="layui-input-block">
+                        <select id="targetLanguage" lay-filter="targetLanguage">
+                          <option value="zh">中文</option>
+                          <option value="en">英语</option>
+                          <option value="yue">粤语</option>
+                          <option value="wyw">文言文</option>
+                          <option value="jp">日语</option>
+                          <option value="kor">韩语</option>
+                          <option value="fra">法语</option>
+                          <option value="spa">西班牙语</option>
+                          <option value="th">泰语</option>
+                          <option value="ara">阿拉伯语</option>
+                          <option value="ru">俄语</option>
+                          <option value="pt">葡萄牙语</option>
+                          <option value="de">德语</option>
+                          <option value="it">意大利语</option>
+                          <option value="el">希腊语</option>
+                          <option value="nl">荷兰语</option>
+                          <option value="pl">波兰语</option>
+                          <option value="bul">保加利亚语</option>
+                          <option value="est">爱沙尼亚语</option>
+                          <option value="dan">丹麦语</option>
+                          <option value="fin">芬兰语</option>
+                          <option value="cs">捷克语</option>
+                          <option value="rom">罗马尼亚语</option>
+                          <option value="slo">斯洛文尼亚语</option>
+                          <option value="swe">瑞典语</option>
+                          <option value="hu">匈牙利语</option>
+                          <option value="cht">繁体中文</option>
+                          <option value="vie">越南语</option>
+                        </select>
+                        <button class="layui-btn layui-btn-blue" id="transBtn">翻译</button>
+                      </div>
+                    </div>
+                  </form>
+
+
+                  <label class="layui-form-label">翻译语言</label><select id="targetLanguage"><option value="zh">中文</option><option value="en">英语</option><option value="yue">粤语</option><option value="wyw">文言文</option><option value="jp">日语</option><option value="kor">韩语</option><option value="fra">法语</option><option value="spa">西班牙语</option><option value="th">泰语</option><option value="ara">阿拉伯语</option><option value="ru">俄语</option><option value="pt">葡萄牙语</option><option value="de">德语</option><option value="it">意大利语</option><option value="el">希腊语</option><option value="nl">荷兰语</option><option value="pl">波兰语</option><option value="bul">保加利亚语</option><option value="est">爱沙尼亚语</option><option value="dan">丹麦语</option><option value="fin">芬兰语</option><option value="cs">捷克语</option><option value="rom">罗马尼亚语</option><option value="slo">斯洛文尼亚语</option><option value="swe">瑞典语</option><option value="hu">匈牙利语</option><option value="cht">繁体中文</option><option value="vie">越南语</option></select></div>
+
+
+                  <table id="srtTable"></table>
+                </div>
+            </div>
+        </div>
+    </div> 
+            
+  <script src="../assets/layui.js"></script>
+  <script src="../assets/layui.all.js"></script>
+  <script src="../assets/js/particle.js"></script>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+  <script src="https://ciphertrick.com/demo/jquerysession/js/jquerysession.js"></script>
+  <script src="../assets/js/upload.js"></script>
+  <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+  <script type="text/javascript">
+    layui.use(['layer','table'], function(){
+      $(function(){
+            $('#transBtn').off().on('click', function(){
+                var data = table.cache['srtTable'];
+                $.ajax({
+                    cache: false,
+                    type: "post",
+                    url:"http://192.168.0.107:8080/srt/translate",
+                    data: {
+                      targetLanguage: function(){
+                        return $('#targetLanguage').val();
+                      },
+                      srt: JSON.stringify(data)},
+                    dataType:'json',
+                    async: false,
+                    success : function(result) {
+                      if (result.code==0) {   
+                            table.render({
+                              elem: '#srtTable'
+                              ,width:'100%'
+                              ,data: res.data
+                              ,limit: Number.MAX_VALUE
+                              ,cols: [[ //标题栏
+                                {field: 'sn', title: '#', width: '5%', sort: true}
+                                ,{field: 'bg', width: '20%', title: '开始时间'}
+                                ,{field: 'ed', width: '20%', title: '结束时间'}
+                                ,{field: 'onebest', width: '55%', title: '内容', edit: 'text'}
+                                ]]
+                            });
+                      }else{
+                        layer.msg(result.msg);
+                      }
+                  },
+                  error : function(errorMsg) {
+                      //请求失败时执行该函数
+                      layer.msg("server error");
+                  },
+              });
+            });
+        });
+    });
+  </script>
+</body>
+</html>

@@ -27,7 +27,7 @@ public class SrtController {
 	UserMapper userMapper;
 
 	@RequestMapping(value = "process", method = RequestMethod.POST)
-    public JSONObject videoUpload(@RequestParam("videoUrl") String videoUrl,
+    public JSONObject srtProcess(@RequestParam("videoUrl") String videoUrl,
     		@RequestParam("srt") String srt,
     		@RequestHeader("Authorization")String token)
             throws IllegalStateException {
@@ -46,6 +46,39 @@ public class SrtController {
 	            //token = Base64EncryptUtils.encrypt(user.getUserName()+"&"+System.currentTimeMillis());
 	            //userMapper.updateTokenByUserName(token, user.getUserName());
 	            result = ss.burnSrt(videoUrl, srt);
+	            result.put("token",token);
+	        }else {
+				result.put("code","401");
+				result.put("msg", "unauthorized");
+			}
+	        
+        }else{
+        	result.put("code","401");
+			result.put("msg", "unauthorized");
+		}
+		return result;
+    }
+	
+	@RequestMapping(value = "translate", method = RequestMethod.POST)
+    public JSONObject srtTranslate(@RequestParam("srt") String srt,
+    		@RequestParam("targetLanguage") String targetLanguage,
+    		@RequestHeader("Authorization")String token)
+            throws IllegalStateException {
+		
+		JSONObject result = new JSONObject();
+		
+		if (!token.isEmpty() && !token.equals("") && token != null && !token.isBlank()) {
+			
+            String tempString = Base64EncryptUtils.decrypt(token);
+            String[] baseInfo = tempString.split("&");
+            String userName = baseInfo[0];
+    		User user = userMapper.selectByUserName(userName);
+    		
+	        if (token.equals(user.getToken())){  
+	            //request.setAttribute(REQUEST_CURRENT_KEY, userName);
+	            //token = Base64EncryptUtils.encrypt(user.getUserName()+"&"+System.currentTimeMillis());
+	            //userMapper.updateTokenByUserName(token, user.getUserName());
+	            result = ss.translateSrt(srt, targetLanguage);
 	            result.put("token",token);
 	        }else {
 				result.put("code","401");

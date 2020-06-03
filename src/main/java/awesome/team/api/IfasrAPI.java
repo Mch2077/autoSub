@@ -1,4 +1,5 @@
 package awesome.team.api;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -6,8 +7,8 @@ import java.io.IOException;
 import java.security.SignatureException;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -73,7 +74,7 @@ public class IfasrAPI {
             while (true) {
                 try {
                     System.out.println("sleep a while Zzz" );
-                    Thread.sleep(2000);
+                    Thread.sleep(20000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -125,7 +126,7 @@ public class IfasrAPI {
         String ts = String.valueOf(System.currentTimeMillis() / 1000L);
         baseParam.put("app_id", APPID);
         baseParam.put("ts", ts);
-        baseParam.put("signa", EncryptUtil.HmacSHA1Encrypt(EncryptUtil.MD5(APPID + ts), SECRET_KEY));
+        baseParam.put("signa", EncryptUtil.HmacSHA1Encrypt(EncryptUtil.md5(APPID + ts), SECRET_KEY));
         if (taskId != null) {
             baseParam.put("task_id", taskId);
         }

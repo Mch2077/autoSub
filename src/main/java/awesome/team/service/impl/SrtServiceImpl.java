@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import awesome.team.api.BaiduAPI;
 import awesome.team.service.SrtService;
 import awesome.team.util.SrtUtil;
 
@@ -27,6 +28,31 @@ public class SrtServiceImpl implements SrtService {
                 result.put("code","200");
             	result.put("msg", "upload success");
             	result.put("webShowPath", webShowPath);
+                //考虑服务器使用http实现文件暴露下载
+                return  result;
+			}
+            return  result;
+        }catch (Exception e){
+            e.printStackTrace();
+            result.put("code","400");
+            result.put("msg", "srt process failed");
+            return  result ;
+        }
+	}
+	
+	@Override
+	public JSONObject translateSrt(String srt, String targetLanguage) {
+		JSONObject result = new JSONObject() ;
+		System.out.println(srt);
+		List<Map<String,String>> AMap = (List<Map<String,String>>) JSONArray.parse(srt);
+		
+        try{
+           List<Map<String, String>> newSrt = BaiduAPI.translate(AMap, targetLanguage);
+            if (!newSrt.isEmpty()) {
+                result.put("code","0");
+                result.put("count", newSrt.size());
+            	result.put("msg", "translate success");
+            	result.put("data", newSrt);
                 //考虑服务器使用http实现文件暴露下载
                 return  result;
 			}
