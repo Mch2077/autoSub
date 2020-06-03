@@ -18,11 +18,11 @@ import awesome.team.util.SrtUtil;
 
 @Service
 public class VideoServiceImpl implements VideoService {
-	private String storePath = ClassUtils.getDefaultClassLoader().getResource("static/res").getPath()+"/";
 	@Override
 	public JSONObject videoUpload(MultipartFile file, boolean isCN) {
 		JSONObject result = new JSONObject() ;
         try{
+        	String storePath = ClassUtils.getDefaultClassLoader().getResource("static/res").getPath()+"/";
             //获取文件后缀
             String fileExt = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1)
                     .toLowerCase();
