@@ -1,11 +1,7 @@
 package main.java.awesome.team.util;
-
-
 import com.alibaba.fastjson.JSONArray;
-import main.java.awesome.team.util.TransApi;
 
 import java.util.List;
-import java.util.HashMap;
 import java.util.Map;
 public class BaiduAPI {
     private static final String APP_ID = "20200522000465460";
@@ -43,15 +39,16 @@ public class BaiduAPI {
     cht          繁体中文
     vie          越南语
     */
-	public static List<Map<String,String>> translate(List<Map<String,String>> listObjectFir , boolean isCN,String to){
+	public static List<Map<String,String>> translate(List<Map<String,String>> listObjectFir, String to){
 		 TransApi api = new TransApi(APP_ID, SECURITY_KEY);
 		 for(Map<String,String> mapList : listObjectFir){ 
 			 String Need = mapList.get("onebest");
 		     String[] str =Need.split("\n");
 //			 System.out.println(str[0]);
 			 Map<String,String> m = null;
-			 if(isCN)m = (Map)JSONArray.parse(api.getTransResult(str[0], "zh",to));
-			 else m = (Map)JSONArray.parse(api.getTransResult(str[0], "en",to));			 
+			 m = (Map)JSONArray.parse(api.getTransResult(str[0], "auto",to));
+			 //if(isCN)m = (Map)JSONArray.parse(api.getTransResult(str[0], "zh",to));
+			 //else m = (Map)JSONArray.parse(api.getTransResult(str[0], "en",to));			 
              Object ob = m.get("trans_result");
 			 String tmp = String.valueOf(ob);;
 			 tmp = subNeedString(tmp);
@@ -61,11 +58,13 @@ public class BaiduAPI {
 			 以下是保留的作为key的tran：
 			 mapList.put("tran",result); 
 		     */
-			 Object fin = mapList.get("onebest");
-			 String t = String.valueOf(fin);
-			 t += '\n';
-			 t += result;
-			 mapList.put("onebest", t);
+
+			 mapList.put("onebest", result);//直接覆盖
+			 /*
+			  * 仅存一个翻译串跟在原文后：
+				 mapList.put("onebest",str[0]+"\n"+result);
+			  */
+			 
      }
 		return listObjectFir;
 	}
