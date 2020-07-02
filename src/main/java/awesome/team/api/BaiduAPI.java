@@ -40,7 +40,7 @@ public class BaiduAPI {
     vie          越南语
     */
 	public static List<Map<String,String>> translate(List<Map<String,String>> listObjectFir, String to){
-		 TransApi api = new TransApi(APP_ID, SECURITY_KEY);
+		 TransAPI api = new TransAPI(APP_ID, SECURITY_KEY);
 		 for(Map<String,String> mapList : listObjectFir){ 
 			 String Need = mapList.get("onebest");
 		     String[] str =Need.split("\n");

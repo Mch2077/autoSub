@@ -5,13 +5,13 @@ import java.util.Map;
 import awesome.team.util.EncryptUtil;
 import awesome.team.util.HttpUtil;
 
-public class TransApi {
+public class TransAPI {
     private static final String TRANS_API_HOST = "http://api.fanyi.baidu.com/api/trans/vip/translate";
 
     private String appid;
     private String securityKey;
 
-    public TransApi(String appid, String securityKey) {
+    public TransAPI(String appid, String securityKey) {
         this.appid = appid;
         this.securityKey = securityKey;
     }
@@ -39,5 +39,4 @@ public class TransApi {
 
         return params;
     }
-
 }

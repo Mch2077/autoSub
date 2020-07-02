@@ -77,6 +77,23 @@
 
         <div class="mobile-mask"></div>
     </div>
+    
+    <div id="landlord">
+	    <div class="message" style="opacity:0"></div>
+	    <canvas id="live2d" width="280" height="250" class="live2d"></canvas>
+	    <div class="hide-button">隐藏</div>
+	</div>
+	<script type="text/javascript" src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+	<script type="text/javascript">
+	    var message_Path = 'https://tsushima3.github.io/live2d/'
+	    var home_Path = 'https://tsushima3.github.io/'
+	</script>
+	<script type="text/javascript" src="live2d/js/live2d.js"></script>
+	<script type="text/javascript" src="live2d/js/message.js"></script>
+	<script type="text/javascript">
+	    loadlive2d("live2d", "https://tsushima3.github.io/live2d/Pio/model.json");
+	</script>
+    
     <script src="assets/layui.js"></script>
     <script src="index.js" data-main="home"></script>
     <script src="assets/js/Base64.js"></script>
@@ -84,11 +101,22 @@
     <script src="http://code.jquery.com/jquery-latest.js"></script>
     <script src="https://ciphertrick.com/demo/jquerysession/js/jquerysession.js"></script>
     <script type="text/javascript">
-        var base = new BASE64();
-        var token = $.session.get("token");
-        var tempString = base.decode(token);
-        var tempWords = tempString.split("&");
-        $("#userName").text(tempWords[0]);
+        layui.use('layer', function(){
+
+            var base = new BASE64();
+            var token = $.session.get("token");
+            if (token != null) {
+                var tempString = base.decode(token);
+                var tempWords = tempString.split("&");
+                $("#userName").text(tempWords[0]);
+            } else {
+                var layer = layui.layer;
+                layer.msg('请先登录', function(){
+                      location.href='login.html';
+                    });
+
+            }
+        });
     </script>
 </body>
 </html>

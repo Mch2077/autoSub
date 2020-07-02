@@ -25,11 +25,8 @@ public class ClearCatch extends QuartzJobBean {
 				}
 				if (temp.isFile()) {
 					temp.delete();
- 
 				}
- 
 			}
- 
 		}
 	}
 }

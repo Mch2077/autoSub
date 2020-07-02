@@ -34,8 +34,9 @@ public class IfasrAPI {
     /**
      * TODO 设置appid和secret_key
      */
-    public static final String APPID = "5ec2cccc";
-    public static final String SECRET_KEY = "46c6eaeb2148f6694bbf6a679e149ce3";
+    public static final String APPID = "5ee05a25";
+    public static final String SECRET_KEY = "7b9e7195ef654266d80ef028d7176ade";
+    
 
     public static final String PREPARE = "/prepare";
     public static final String UPLOAD = "/upload";
@@ -74,7 +75,7 @@ public class IfasrAPI {
             while (true) {
                 try {
                     System.out.println("sleep a while Zzz" );
-                    Thread.sleep(20000);
+                    Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

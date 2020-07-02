@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import awesome.team.api.BaiduAPI;
+import awesome.team.api.NiutransAPI;
 import awesome.team.service.SrtService;
 import awesome.team.util.SrtUtil;
 
@@ -19,7 +20,7 @@ public class SrtServiceImpl implements SrtService {
 	@Override
 	public JSONObject burnSrt(String videoUrl, String srt) {
 		JSONObject result = new JSONObject() ;
-		System.out.println(srt);
+		//System.out.println(srt);
 		List<Map<String,String>> AMap = (List<Map<String,String>>) JSONArray.parse(srt);
 		
         try{
@@ -42,12 +43,13 @@ public class SrtServiceImpl implements SrtService {
 	
 	@Override
 	public JSONObject translateSrt(String srt, String targetLanguage) {
-		JSONObject result = new JSONObject() ;
-		System.out.println(srt);
+		JSONObject result = new JSONObject();
+		//System.out.println(srt);
 		List<Map<String,String>> AMap = (List<Map<String,String>>) JSONArray.parse(srt);
 		
         try{
-           List<Map<String, String>> newSrt = BaiduAPI.translate(AMap, targetLanguage);
+           //List<Map<String, String>> newSrt = BaiduAPI.translate(AMap, targetLanguage);
+           List<Map<String, String>> newSrt = NiutransAPI.doPost(AMap, targetLanguage);
             if (!newSrt.isEmpty()) {
                 result.put("code","0");
                 result.put("count", newSrt.size());
