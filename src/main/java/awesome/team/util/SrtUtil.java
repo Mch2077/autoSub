@@ -334,10 +334,10 @@ public class SrtUtil {
         
         String burnedFile = "";
         String burnedFile1 = "";
-        burnedFile1 = Wfilename+"(sub)."+fileSuffix;
+        burnedFile1 = Wfilename+"_sub."+fileSuffix;
         try {
             //将字幕压缩至视频中
-            burnedFile = filename+"(sub)."+fileSuffix;
+            burnedFile = filename+"_sub."+fileSuffix;
             String command = FFMPEG_PATH + " -i "+ videoUrl + " -vf subtitles="+ subtitleFile +" "+ burnedFile;
             Process process = Runtime.getRuntime().exec(command);
             process.waitFor();
@@ -345,6 +345,6 @@ public class SrtUtil {
         	System.out.println(e.toString());
             System.out.println("视频压缩字幕失败，视频地址："+videoUrl+",字幕地址："+subtitleUrl );
         }
-        return burnedFile1;
+return burnedFile1;
     }
 }

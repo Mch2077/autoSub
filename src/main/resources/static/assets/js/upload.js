@@ -7,7 +7,7 @@ layui.use(['upload','layer','table'], function(){
   //拖拽上传mp4
   var uploadInst = upload.render({
     elem: '#select'
-    ,url: 'http://192.168.0.107:8080/video/upload' //改成您自己的上传接口
+    ,url: '/video/upload' //改成您自己的上传接口
     ,accept: 'video' //视频
     ,exts: 'mp4' //只允许上传mp4
     ,auto: false
@@ -64,7 +64,7 @@ layui.use(['upload','layer','table'], function(){
                 $.ajax({
                   cache: false,
                   type: "post",
-                  url:"http://192.168.0.107:8080/srt/process",
+                  url:"/srt/process",
                   data: {videoUrl: res.videoUrl,
                           srt: JSON.stringify(data)},
                   dataType: 'json',
@@ -102,7 +102,7 @@ layui.use(['upload','layer','table'], function(){
                 $.ajax({
                   cache: false,
                   type: "post",
-                  url:"http://192.168.0.107:8080/srt/translate",
+                  url:"/srt/translate",
                   data: {srt: JSON.stringify(data),
                           targetLanguage: targetLanguage},
                   dataType: 'json',

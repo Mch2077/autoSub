@@ -29,13 +29,13 @@ import awesome.team.util.SliceIdGenerator;
 
 public class IfasrAPI {
 
-    public static final String LFASR_HOST = "http://raasr.xfyun.cn/api";
+    public static final String LFASR_HOST = "https://raasr.xfyun.cn/api";
 
     /**
      * TODO 设置appid和secret_key
      */
-    public static final String APPID = "5ee05a25";
-    public static final String SECRET_KEY = "7b9e7195ef654266d80ef028d7176ade";
+    public static final String APPID = "5fc3ad41";
+    public static final String SECRET_KEY = "04291fff5a605c036d1e4a396190ac81";
     
 
     public static final String PREPARE = "/prepare";

@@ -27,7 +27,7 @@ public class NiutransAPI {
 			
 			String src = map.get("onebest");
 			String result = null;
-			String apiurl = "https://free.niutrans.com/NiuTransServer/translation?from=auto&to=" + to + "&apikey=" + apikey +  "&src_text="+URLEncoder.encode(src,"utf-8");
+			String apiurl = "https://api.niutrans.com/NiuTransServer/translation?from=auto&to=" + to + "&apikey=" + apikey +  "&src_text="+URLEncoder.encode(src,"utf-8");
 			
 			if (null == apiurl || !apiurl.startsWith("http")) {  
 				throw new Exception("请求地址格式不对");  
